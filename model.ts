@@ -1,4 +1,4 @@
-import db from "../db/connection"
+import db from "./db/connection.js"
 
 const fetchHighScores = async () => {
 	const query = `
