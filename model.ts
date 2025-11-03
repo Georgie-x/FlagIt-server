@@ -37,3 +37,4 @@ const insertHighScores = async (name: string, score: number, time: string) => {
 	const result = await db.query(query, [name, score, time])
 	return result.rows[0]
 }
+export { fetchHighScores, insertHighScores }

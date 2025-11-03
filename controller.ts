@@ -1,16 +1,16 @@
 import { fetchHighScores, insertHighScores } from "./model"
 import { Request, Response, NextFunction } from "express"
 
-const getHighScores = async (req : Request, res: Response, next: NextFunction) => {
+const getHighScores = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const { name, score, date } = req.query
-		const highscores = await fetchHighScores(name, score, date)
+		const highscores = await fetchHighScores()
 		return res.status(200).send(highscores)
 	} catch (err) {
 		next(err)
 	}
 }
-const postHighScores = async (req : Request, res: Response, next: NextFunction) => {
+const postHighScores = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const newScore = req.body
 		const { name, score, time } = req.params
@@ -21,7 +21,4 @@ const postHighScores = async (req : Request, res: Response, next: NextFunction) 
 	}
 }
 
-module.exports = {
-	getHighScores,
-	postHighScores,
-}
+export { getHighScores, postHighScores }
