@@ -1,4 +1,4 @@
-import { ErrorRequestHandler } from 'express';
+import { ErrorRequestHandler } from "express"
 
 const handleCustomErrors: ErrorRequestHandler = (err, req, res, next) => {
 	if (err.status && err.message) {
@@ -6,7 +6,7 @@ const handleCustomErrors: ErrorRequestHandler = (err, req, res, next) => {
 	} else next(err)
 }
 
-const handlePsqlErrors = (err, req, res, next) => {
+const handlePsqlErrors: ErrorRequestHandler = (err, req, res, next) => {
 	if (err.code === "22P02") {
 		res.status(400).send({ message: "Invalid input" })
 	} else if (err.code === "42601") {
@@ -14,11 +14,11 @@ const handlePsqlErrors = (err, req, res, next) => {
 	} else next(err)
 }
 
-const handleServerErrors = (err, req, res, next) => {
+const handleServerErrors: ErrorRequestHandler = (err, req, res, next) => {
 	if (err.status === 500) {
 		console.log(err)
 		res.status(500).send({ message: "Internal Server Error" })
 	} else next(err)
 }
 
-export {handleCustomErrors, handlePsqlErrors, handleServerErrors}
+export { handleCustomErrors, handlePsqlErrors, handleServerErrors }

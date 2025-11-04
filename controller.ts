@@ -1,21 +1,37 @@
 import { fetchHighScores, insertHighScores } from "./model"
-import { Request, Response, NextFunction } from "express"
+import { RequestHandler } from "express"
 
-const getHighScores = async (req: Request, res: Response, next: NextFunction) => {
+const getHighScores: RequestHandler = async (req, res, next) => {
 	try {
-		const { name, score, date } = req.query
 		const highscores = await fetchHighScores()
-		return res.status(200).send(highscores)
+		res.status(200).json(highscores)
 	} catch (err) {
 		next(err)
 	}
 }
-const postHighScores = async (req: Request, res: Response, next: NextFunction) => {
+const postHighScores: RequestHandler = async (req, res, next) => {
 	try {
-		const newScore = req.body
-		const { name, score, time } = req.params
-		const result = newScore(name, score, time)
-		return res.status(201).send({ result })
+		const { name, score, time } = req.body
+		if (!name || !score || !time) {
+			return res
+				.status(400)
+				.json({ message: "Missing required fields: name, score, and time are required" })
+		}
+
+		if (typeof name !== "string") {
+			return res.status(400).json({ message: "Name must be a string" })
+		}
+
+		if (typeof score !== "number" || score < 0) {
+			return res.status(400).json({ message: "Score must be a positive number" })
+		}
+
+		const dateTime = new Date(time)
+		if (isNaN(dateTime.getTime())) {
+			return res.status(400).json({ message: "Time must be a valid date" })
+		}
+		const result = await insertHighScores(name, score, dateTime)
+		res.status(201).json(result)
 	} catch (err) {
 		next(err)
 	}
